@@ -1,0 +1,27 @@
+version: '24.0.9'
+
+services:
+  # gui:
+  #   build:
+  #     context: . # Build from the current directory, where Dockerfile is located
+  #     dockerfile: Dockerfile
+  #   container_name: inventory_app
+  #   volumes:
+  #     - .:/app # Map the current directory to the /app directory in the container
+
+  mysql:
+    image: mysql # Use MySQL version 8.0
+    container_name: inventory_mysql # Name for the container
+    restart: always # Automatically restart the container if it crashes
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456 # Root user password
+      MYSQL_DATABASE: inventory_system # Name of the database for your project
+      MYSQL_USER: inventory_user # Custom user for the database
+      MYSQL_PASSWORD: 123 # Password for the custom user
+    ports:
+      - '3366:3306' # Expose MySQL on localhost:3366
+    volumes:
+      - db_data:/var/lib/mysql # Persist database data to avoid losing it when the container stops
+
+volumes:
+  db_data: # Docker volume for MySQL data persistence
