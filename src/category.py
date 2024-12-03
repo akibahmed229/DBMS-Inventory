@@ -1,10 +1,12 @@
 from tkinter import *
-from tkinter.ttk import Treeview
+from tkinter.ttk import Treeview, Combobox
 from src.components.button import create_button
 
+from src.database.supplierDB import show_supplier
 from src.database.categoryDB import (
     add_category,
     create_category_table,
+    create_supplier_category_junction_table,
     delete_category,
     show_category,
 )
@@ -65,10 +67,24 @@ def create_action_button(parent, text, command, row, column):
     button.grid(row=row, column=column, padx=10, pady=10)
 
 
+def create_label_combobox_pair(parent, text, row, column, values, default="Select"):
+    """Create a label and a combobox widget as a pair."""
+    label = Label(parent, text=text, font=("Arial", 12), bg="#0F0C0C", fg="white")
+    label.grid(row=row, column=column, padx=20, pady=10, sticky="w")
+
+    combobox = Combobox(
+        parent, values=values, state="readonly", font=("Arial", 12), width=18
+    )
+    combobox.set(default)
+    combobox.grid(row=row, column=column + 1, padx=20, pady=10)
+    return combobox
+
+
 def category_form(parent, employee_data):
     global logo
     global category_treeview
     create_category_table()
+    create_supplier_category_junction_table()
 
     category_frame = Frame(parent, bg="#0F0C0C", relief=SUNKEN, bd=1)
     category_frame.place(x=0, y=0, width=1020, height=620)
@@ -100,7 +116,16 @@ def category_form(parent, employee_data):
     details_frame.place(x=500, y=60, width=900, height=500)
 
     id_entry = create_label_entry_pair(details_frame, "ID.", 0, 0)
-    categoryName_entry = create_label_entry_pair(details_frame, "Category Name", 1, 0)
+    supplier_category_label = create_label_combobox_pair(
+        details_frame,
+        "Supplier Invoice",
+        1,
+        0,
+        [
+            item[0] for item in show_supplier(employee_data[0][0])
+        ],  # get the supplier invoice
+    )
+    categoryName_entry = create_label_entry_pair(details_frame, "Category Name", 2, 0)
 
     description_label = Label(
         details_frame, text="Address", font=("Arial", 12), bg="#0F0C0C", fg="white"
@@ -126,6 +151,7 @@ def category_form(parent, employee_data):
             id_entry.get(),
             categoryName_entry.get(),
             description_text.get(1.0, END),
+            supplier_category_label.get(),
             treeview_data,
         ),
         4,

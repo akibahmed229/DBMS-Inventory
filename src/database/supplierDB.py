@@ -28,31 +28,6 @@ def create_supplier_table():
         connection.close()
 
 
-def create_supplier_category_junction_table():
-    cursor, connection = connect_database()
-    if not cursor:
-        return
-
-    try:
-        cursor.execute(
-            """
-            create table if not exists supplier_category (
-                supplier_id int,
-                category_id int,
-                primary key (supplier_id, category_id),
-                primary key (supplier_id) references supplier_data(invoice),
-                primary key (category_id) references category_data(id)
-            );
-            """
-        )
-    except Exception as e:
-        messagebox.showerror("Error", f"Table creation failed: {e}")
-        return
-    finally:
-        cursor.close()
-        connection.close()
-
-
 def add_supplier(
     empid,
     invoice,

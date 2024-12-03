@@ -2,9 +2,12 @@ from tkinter import *
 from src.category import category_form
 from src.employee import employee_form
 from src.supplier import supplier_form
+from src.product import product_form
 from src.components.image import load_image
 from src.components.label import create_label
 from src.components.button import create_button
+
+from src.database.dashboardDB import get_total_count
 
 
 # Constants for global settings
@@ -62,7 +65,11 @@ def setup_sidebar(parent, employee_data):
             load_image(IMG_PATHS["category"]),
             lambda: category_form(right_frame, employee_data),
         ),
-        ("Product", load_image(IMG_PATHS["product"]), None),
+        (
+            "Product",
+            load_image(IMG_PATHS["product"]),
+            lambda: product_form(right_frame, employee_data),
+        ),
         ("Sales", load_image(IMG_PATHS["sales"]), None),
         ("Exit", load_image(IMG_PATHS["exit"]), parent.quit),
     ]
@@ -91,6 +98,7 @@ def create_summary_frame(parent, x, y, title, icon_path, count):
 
 def my_dashboard(window, employee_data):
     global right_frame
+    total_emp, total_sup, total_cat, total_prod = get_total_count()
 
     # Dashboard Title
     title_img = load_image(IMG_PATHS["inventory"])
@@ -127,16 +135,16 @@ def my_dashboard(window, employee_data):
 
     # Dashboard Summary Sections
     create_summary_frame(
-        right_frame, 90, 20, "Total Employee", IMG_PATHS["total_emp"], 50
+        right_frame, 90, 20, "Total Employee", IMG_PATHS["total_emp"], total_emp
     )
     create_summary_frame(
-        right_frame, 450, 20, "Total Supplier", IMG_PATHS["total_sup"], 50
+        right_frame, 450, 20, "Total Supplier", IMG_PATHS["total_sup"], total_sup
     )
     create_summary_frame(
-        right_frame, 90, 230, "Total Category", IMG_PATHS["total_cat"], 50
+        right_frame, 90, 230, "Total Category", IMG_PATHS["total_cat"], total_cat
     )
     create_summary_frame(
-        right_frame, 450, 230, "Total Product", IMG_PATHS["total_prod"], 50
+        right_frame, 450, 230, "Total Product", IMG_PATHS["total_prod"], total_prod
     )
 
     # Sales Section

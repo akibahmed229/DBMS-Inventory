@@ -25,7 +25,32 @@ def create_category_table():
         connection.close()
 
 
-def add_category(id, name, description, treeview_data):
+def create_supplier_category_junction_table():
+    cursor, connection = connect_database()
+    if not cursor:
+        return
+
+    try:
+        cursor.execute(
+            """
+            create table if not exists supplier_category (
+                supplier_id int,
+                category_id int,
+                primary key (supplier_id, category_id),
+                foreign key (supplier_id) references supplier_data(invoice),
+                foreign key (category_id) references category_data(id)
+            );
+            """
+        )
+    except Exception as e:
+        messagebox.showerror("Error", f"Table creation failed: {e}")
+        return
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def add_category(id, name, description, supplier_invoice, treeview_data):
     if id == "" or name == "" or description == "":
         messagebox.showerror("Error", "All fields are required")
         return
@@ -39,6 +64,13 @@ def add_category(id, name, description, treeview_data):
                 values (%s, %s, %s)
                 """,
                 (id, name, description),
+            )
+            cursor.execute(
+                """
+                insert into supplier_category 
+                values (%s, %s)
+                """,
+                (supplier_invoice, id),
             )
             connection.commit()
             treeview_data()
