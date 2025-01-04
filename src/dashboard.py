@@ -1,4 +1,8 @@
 from tkinter import *
+from src.database.categoryDB import create_category_table
+from src.database.employeeDB import create_employee_table
+from src.database.productDB import create_product_table
+from src.database.supplierDB import create_supplier_table
 from src.category import category_form
 from src.employee import employee_form
 from src.supplier import supplier_form
@@ -98,7 +102,11 @@ def create_summary_frame(parent, x, y, title, icon_path, count):
 
 def my_dashboard(window, employee_data):
     global right_frame
-    total_emp, total_sup, total_cat, total_prod = get_total_count()
+    # total_emp, total_sup, total_cat, total_prod = get_total_count()
+    create_category_table()
+    create_employee_table()
+    create_product_table()
+    create_supplier_table()
 
     # Dashboard Title
     title_img = load_image(IMG_PATHS["inventory"])
@@ -135,16 +143,16 @@ def my_dashboard(window, employee_data):
 
     # Dashboard Summary Sections
     create_summary_frame(
-        right_frame, 90, 20, "Total Employee", IMG_PATHS["total_emp"], total_emp
+        right_frame, 90, 20, "Total Employee", IMG_PATHS["total_emp"], 10
     )
     create_summary_frame(
-        right_frame, 450, 20, "Total Supplier", IMG_PATHS["total_sup"], total_sup
+        right_frame, 450, 20, "Total Supplier", IMG_PATHS["total_sup"], 10
     )
     create_summary_frame(
-        right_frame, 90, 230, "Total Category", IMG_PATHS["total_cat"], total_cat
+        right_frame, 90, 230, "Total Category", IMG_PATHS["total_cat"], 10
     )
     create_summary_frame(
-        right_frame, 450, 230, "Total Product", IMG_PATHS["total_prod"], total_prod
+        right_frame, 450, 230, "Total Product", IMG_PATHS["total_prod"], 10
     )
 
     # Sales Section
